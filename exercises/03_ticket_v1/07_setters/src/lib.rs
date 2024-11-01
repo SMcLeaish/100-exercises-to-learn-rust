@@ -44,7 +44,7 @@ impl Ticket {
         self.status = new_status
     }
 
-    fn string_check(title: &String, description: &String, status: &String) {
+    fn string_check(title: &str, description: &str, status: &str) {
         if title.is_empty() {
             panic!("Title cannot be empty");
         }
