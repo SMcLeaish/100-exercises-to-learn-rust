@@ -52,12 +52,12 @@ impl Ticket {
             ));
         }
         if description.is_empty() {
-            return Err(TicketNewError::TitleError(
+            return Err(TicketNewError::DescriptionError(
                 "Description cannot be empty".to_string(),
             ));
         }
         if description.len() > 500 {
-            return Err(TicketNewError::TitleError(
+            return Err(TicketNewError::DescriptionError(
                 "Description cannot be longer than 500 bytes".to_string(),
             ));
         }
