@@ -7,7 +7,33 @@ pub enum Status {
     InProgress,
     Done,
 }
-#[derive(Error)]
+#[derive(Debug, Error)]
+#[error("`{invalid_status}` is not a valid status. Use one of: ToDo, InProgress, Done")]
+pub struct ParseStatusError {
+    invalid_status: String,
+}
+fn parse_status(status: &str) -> Result<Status, ParseStatusError> {
+    match status.to_lowercase().as_str() {
+        "todo" => Ok(Status::ToDo),
+        "inprogress" => Ok(Status::InProgress),
+        "done" => Ok(Status::Done),
+        _ => Err(ParseStatusError {
+            invalid_status: status.to_string(),
+        }),
+    }
+}
+impl TryFrom<String> for Status {
+    type Error = ParseStatusError;
+    fn try_from(status: String) -> Result<Self, Self::Error> {
+        parse_status(&status)
+    }
+}
+impl TryFrom<&str> for Status {
+    type Error = ParseStatusError;
+    fn try_from(status: &str) -> Result<Self, Self::Error> {
+        parse_status(status)
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
