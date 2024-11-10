@@ -7,28 +7,28 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq)]
 pub struct TicketTitle(String);
 #[derive(Debug, Error)]
-pub enum ParseTitleError {
+pub enum TicketTitleError {
     #[error("The title cannot be empty")]
     EmptyTitle,
     #[error("The title cannot be longer than 50 bytes")]
     TooLongTitle,
 }
-fn validate_title(title: &str) -> Result<(), ParseTitleError> {
+fn validate_title(title: &str) -> Result<(), TicketTitleError> {
     match title {
-        title if title.is_empty() => Err(ParseTitleError::EmptyTitle),
-        title if title.len() > 50 => Err(ParseTitleError::TooLongTitle),
+        title if title.is_empty() => Err(TicketTitleError::EmptyTitle),
+        title if title.len() > 50 => Err(TicketTitleError::TooLongTitle),
         _ => Ok(()),
     }
 }
 impl TryFrom<String> for TicketTitle {
-    type Error = ParseTitleError;
+    type Error = TicketTitleError;
     fn try_from(value: String) -> Result<Self, Self::Error> {
         validate_title(&value)?;
         Ok(Self(value))
     }
 }
 impl TryFrom<&str> for TicketTitle {
-    type Error = ParseTitleError;
+    type Error = TicketTitleError;
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         validate_title(value)?;
         Ok(Self(value.to_string()))

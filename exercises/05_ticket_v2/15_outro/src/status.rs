@@ -1,12 +1,13 @@
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for the `Status` enum.
 //  The parsing should be case-insensitive.
-
+use thiserror::Error;
+#[derive(Debug, Clone, PartialEq)]
 pub enum Status {
     ToDo,
     InProgress,
     Done,
 }
-
+#[derive(Error)]
 #[cfg(test)]
 mod tests {
     use super::*;

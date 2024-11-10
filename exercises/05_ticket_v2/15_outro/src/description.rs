@@ -9,28 +9,28 @@ use thiserror::Error;
 pub struct TicketDescription(String);
 
 #[derive(Debug, Error)]
-pub enum ParseDescriptionError {
+pub enum TicketDescriptionError {
     #[error("The description cannot be empty")]
     EmptyDescription,
     #[error("The description cannot be longer than 500 bytes")]
     TooLongDescription,
 }
-fn validate_description(desc: &str) -> Result<(), ParseDescriptionError> {
+fn validate_description(desc: &str) -> Result<(), TicketDescriptionError> {
     match desc {
-        desc if desc.is_empty() => Err(ParseDescriptionError::EmptyDescription),
-        desc if desc.len() > 500 => Err(ParseDescriptionError::TooLongDescription),
+        desc if desc.is_empty() => Err(TicketDescriptionError::EmptyDescription),
+        desc if desc.len() > 500 => Err(TicketDescriptionError::TooLongDescription),
         _ => Ok(()),
     }
 }
 impl TryFrom<String> for TicketDescription {
-    type Error = ParseDescriptionError;
+    type Error = TicketDescriptionError;
     fn try_from(value: String) -> Result<Self, Self::Error> {
         validate_description(&value)?;
         Ok(Self(value))
     }
 }
 impl TryFrom<&str> for TicketDescription {
-    type Error = ParseDescriptionError;
+    type Error = TicketDescriptionError;
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         validate_description(value)?;
         Ok(Self(value.to_string()))
