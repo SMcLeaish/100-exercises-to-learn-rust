@@ -13,7 +13,7 @@ pub enum ParseTitleError {
     #[error("The title cannot be longer than 50 bytes")]
     TooLongTitle,
 }
-fn validate_title(title: &String) -> Result<(), ParseTitleError> {
+fn validate_title(title: &str) -> Result<(), ParseTitleError> {
     match title {
         title if title.is_empty() => Err(ParseTitleError::EmptyTitle),
         title if title.len() > 50 => Err(ParseTitleError::TooLongTitle),
@@ -30,7 +30,7 @@ impl TryFrom<String> for TicketTitle {
 impl TryFrom<&str> for TicketTitle {
     type Error = ParseTitleError;
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        validate_title(&value.to_string())?;
+        validate_title(value)?;
         Ok(Self(value.to_string()))
     }
 }
