@@ -1,7 +1,8 @@
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for the `TicketDescription` type,
 //   enforcing that the description is not empty and is not longer than 500 bytes.
 //   Implement the traits required to make the tests pass too.
-
+use thiserror::Error;
+#[derive(PartialEq, Debug, Clone, Error)]
 pub struct TicketDescription(String);
 
 #[cfg(test)]
