@@ -1,9 +1,39 @@
+use std::collections::hash_map::Values;
+
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for the `TicketTitle` type,
 //   enforcing that the title is not empty and is not longer than 50 characters.
 //   Implement the traits required to make the tests pass too.
-
+use thiserror::Error;
+#[derive(Debug, Clone, PartialEq)]
 pub struct TicketTitle(String);
-
+#[derive(Debug, Error)]
+pub enum ParseTitleError {
+    #[error("The title cannot be empty")]
+    EmptyTitle,
+    #[error("The title cannot be longer than 50 bytes")]
+    TooLongTitle,
+}
+fn validate_title(title: &String) -> Result<(), ParseTitleError> {
+    match title {
+        title if title.is_empty() => Err(ParseTitleError::EmptyTitle),
+        title if title.len() > 50 => Err(ParseTitleError::TooLongTitle),
+        _ => Ok(()),
+    }
+}
+impl TryFrom<String> for TicketTitle {
+    type Error = ParseTitleError;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        validate_title(&value)?;
+        Ok(Self(value))
+    }
+}
+impl TryFrom<&str> for TicketTitle {
+    type Error = ParseTitleError;
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        validate_title(&value.to_string())?;
+        Ok(Self(value.to_string()))
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
