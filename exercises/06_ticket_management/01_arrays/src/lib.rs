@@ -32,6 +32,12 @@ impl WeekTemperatures {
     }
 }
 
+impl Default for WeekTemperatures {
+    fn default() -> Self {
+        WeekTemperatures::new()
+    }
+}
+
 fn day_index(day: &Weekday) -> usize {
     match day {
         Weekday::Monday => 0,
