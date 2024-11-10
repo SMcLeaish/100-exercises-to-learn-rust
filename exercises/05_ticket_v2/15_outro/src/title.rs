@@ -14,24 +14,26 @@ pub enum TicketTitleError {
     TooLongTitle,
 }
 fn validate_title(title: &str) -> Result<(), TicketTitleError> {
-    match title {
-        title if title.is_empty() => Err(TicketTitleError::EmptyTitle),
-        title if title.len() > 50 => Err(TicketTitleError::TooLongTitle),
-        _ => Ok(()),
+    if title.is_empty() {
+        Err(TicketTitleError::EmptyTitle)
+    } else if title.len() > 50 {
+        Err(TicketTitleError::TooLongTitle)
+    } else {
+        Ok(())
     }
 }
 impl TryFrom<String> for TicketTitle {
     type Error = TicketTitleError;
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        validate_title(&value)?;
-        Ok(Self(value))
+    fn try_from(title: String) -> Result<Self, Self::Error> {
+        validate_title(&title)?;
+        Ok(Self(title))
     }
 }
 impl TryFrom<&str> for TicketTitle {
     type Error = TicketTitleError;
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        validate_title(value)?;
-        Ok(Self(value.to_string()))
+    fn try_from(title: &str) -> Result<Self, Self::Error> {
+        validate_title(title)?;
+        Ok(Self(title.to_string()))
     }
 }
 #[cfg(test)]
