@@ -1,3 +1,5 @@
+use std::collections::hash_map::Values;
+
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for the `TicketDescription` type,
 //   enforcing that the description is not empty and is not longer than 500 bytes.
 //   Implement the traits required to make the tests pass too.
@@ -13,24 +15,25 @@ pub enum ParseDescriptionError {
     #[error("The description cannot be longer than 500 bytes")]
     TooLongDescription,
 }
+fn validate_description(desc: &str) -> Result<(), ParseDescriptionError> {
+    match desc {
+        desc if desc.is_empty() => Err(ParseDescriptionError::EmptyDescription),
+        desc if desc.len() > 500 => Err(ParseDescriptionError::TooLongDescription),
+        _ => Ok(()),
+    }
+}
 impl TryFrom<String> for TicketDescription {
     type Error = ParseDescriptionError;
     fn try_from(value: String) -> Result<Self, Self::Error> {
-        match value.as_str() {
-            desc if desc.is_empty() => Err(ParseDescriptionError::EmptyDescription),
-            desc if desc.len() > 500 => Err(ParseDescriptionError::TooLongDescription),
-            _ => Ok(Self(value)),
-        }
+        validate_description(&value)?;
+        Ok(Self(value))
     }
 }
 impl TryFrom<&str> for TicketDescription {
     type Error = ParseDescriptionError;
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value {
-            desc if desc.is_empty() => Err(ParseDescriptionError::EmptyDescription),
-            desc if desc.len() > 500 => Err(ParseDescriptionError::TooLongDescription),
-            _ => Ok(Self(value.to_string())),
-        }
+        validate_description(value)?;
+        Ok(Self(value.to_string()))
     }
 }
 
