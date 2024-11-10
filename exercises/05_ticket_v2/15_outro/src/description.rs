@@ -16,24 +16,26 @@ pub enum TicketDescriptionError {
     TooLongDescription,
 }
 fn validate_description(desc: &str) -> Result<(), TicketDescriptionError> {
-    match desc {
-        desc if desc.is_empty() => Err(TicketDescriptionError::EmptyDescription),
-        desc if desc.len() > 500 => Err(TicketDescriptionError::TooLongDescription),
-        _ => Ok(()),
+    if desc.is_empty() {
+        Err(TicketDescriptionError::EmptyDescription)
+    } else if desc.len() > 500 {
+        Err(TicketDescriptionError::TooLongDescription)
+    } else {
+        Ok(())
     }
 }
 impl TryFrom<String> for TicketDescription {
     type Error = TicketDescriptionError;
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        validate_description(&value)?;
-        Ok(Self(value))
+    fn try_from(desc: String) -> Result<Self, Self::Error> {
+        validate_description(&desc)?;
+        Ok(Self(desc))
     }
 }
 impl TryFrom<&str> for TicketDescription {
     type Error = TicketDescriptionError;
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        validate_description(value)?;
-        Ok(Self(value.to_string()))
+    fn try_from(desc: &str) -> Result<Self, Self::Error> {
+        validate_description(desc)?;
+        Ok(Self(desc.to_string()))
     }
 }
 
