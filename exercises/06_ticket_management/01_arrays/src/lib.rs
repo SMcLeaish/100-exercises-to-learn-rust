@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn test_get_temperature() {
-        let mut week_temperatures = WeekTemperatures::new();
+        let mut week_temperatures = WeekTemperatures::default();
 
         assert_eq!(week_temperatures.get_temperature(Weekday::Monday), None);
         assert_eq!(week_temperatures.get_temperature(Weekday::Tuesday), None);
