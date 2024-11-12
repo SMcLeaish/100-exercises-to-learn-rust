@@ -1,5 +1,5 @@
 // TODO: Implement `Index<&TicketId>` and `Index<TicketId>` for `TicketStore`.
-
+use std::ops::Index;
 use ticket_fields::{TicketDescription, TicketTitle};
 
 #[derive(Clone)]
@@ -58,6 +58,25 @@ impl TicketStore {
     }
 }
 
+impl Default for TicketStore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Index<TicketId> for TicketStore {
+    type Output = Ticket;
+    fn index(&self, id: TicketId) -> &Self::Output {
+        self.tickets.iter().find(|&ticket| ticket.id == id).unwrap()
+    }
+}
+
+impl Index<&TicketId> for TicketStore {
+    type Output = Ticket;
+    fn index(&self, id: &TicketId) -> &Self::Output {
+        &self[*id]
+    }
+}
 #[cfg(test)]
 mod tests {
     use crate::{Status, TicketDraft, TicketStore};
