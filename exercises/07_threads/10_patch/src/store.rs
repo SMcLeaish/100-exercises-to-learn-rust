@@ -36,6 +36,6 @@ impl TicketStore {
     }
 
     pub fn get_mut(&mut self, id: TicketId) -> Option<&mut Ticket> {
-        self.tickets.get_mut(&id).cloned()
+        self.tickets.get_mut(&id)
     }
 }
