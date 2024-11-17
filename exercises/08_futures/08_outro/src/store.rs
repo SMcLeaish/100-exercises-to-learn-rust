@@ -1,17 +1,15 @@
-use std::collections::BTreeMap;
-use std::sync::Arc;
-use tokio::sync::RwLock;
-
 use crate::data::{Status, Ticket, TicketDraft};
+use std::collections::BTreeMap;
 
-#[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TicketId(u64);
 
 #[derive(Clone)]
 pub struct TicketStore {
-    tickets: BTreeMap<TicketId, Arc<RwLock<Ticket>>>,
+    tickets: BTreeMap<TicketId, Ticket>,
     counter: u64,
 }
+
 impl TicketStore {
     pub fn new() -> Self {
         Self {
@@ -19,9 +17,20 @@ impl TicketStore {
             counter: 0,
         }
     }
-}
-impl Default for TicketStore {
-    fn default() -> Self {
-        Self::new()
+    pub fn add_ticket(&mut self, ticket: TicketDraft) -> TicketId {
+        let id = TicketId(self.counter);
+        self.counter += 1;
+        let ticket = Ticket {
+            id,
+            title: ticket.title,
+            description: ticket.description,
+            status: Status::ToDo,
+        };
+        self.tickets.insert(id, ticket);
+        id
+    }
+
+    pub async fn get(&self, id: TicketId) -> Option<&Ticket> {
+        self.tickets.get(&id)
     }
 }
